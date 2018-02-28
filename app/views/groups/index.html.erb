@@ -1,0 +1,25 @@
+<h3> Hi <%= current_user.first_name %> <%= current_user.last_name %>!</h3>
+
+<p>Here are the organizations you may join:</p>
+
+<% @groups.each do |group| %>
+    <% if current_user.id == group.user.id %>
+        <a href="/groups/<%= group.id %>" data-method="delete"> <button> [X] </button> </a>
+    <% end %>
+    <a href="/groups/<%= group.id%>"> <%= group.name %> </a> <br>
+    Members: <%= group.users_enrolled.count %>  <br>
+    <%= group.description %> 
+    <br> <br>
+<% end %>
+
+<h3> Create a new organization:</h3>
+<form action='/groups' method='post'>
+    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+    Org name:
+    <input type='text' name='group[name]' />
+    <br><br>
+    Description:
+    <input type='text' name='group[description]' />
+    <br><br>
+    <input id="button" type='submit' value='Create' />
+</form>

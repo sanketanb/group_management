@@ -1,0 +1,36 @@
+vagrant ssh
+
+# access the postgres shell
+vagrant@vagrant-ubuntu-trusty-64: ~$ sudo su postgres -c psql
+# create a user
+postgres=# CREATE ROLE vagrant SUPERUSER LOGIN;
+# exiting the shell
+postgres=# \q
+
+rails new group_management --database=postgresql --skip-test-unit
+
+Gemfile
+
+gem 'pg' #should already be in your gemfile
+gem 'bcrypt'
+gem 'hirb'
+
+cd group_management
+bundle install
+
+rake db:create
+
+rails g model User first_name:string last_name:string email:string password:digest
+rake db:migrate
+
+rails g controller Main new --no-controller-specs --no-view-specs
+rails g controller Users
+
+rails g model Group name:string description:text user:references
+rails g model Member user:references group:references
+rake db:migrate
+
+rails g controller Groups index show
+
+
+rails g controller Members create destroy --no-controller-specs --no-view-specs

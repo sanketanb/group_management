@@ -1,0 +1,28 @@
+<% content_for :dashboard_link do %>
+    <a href="/groups"> Dashboard </a>
+<% end %>
+
+<h1><%= @display_group.name %></h1>
+
+<% if @display_group.users_enrolled.include?(current_user) %><br>
+    <a href="/groups/<%= @display_group.id%>/members" data-method="delete"> <button> Leave Group </button> </a>
+<% else %>
+    <form action="/groups/<%= @display_group.id%>/members" method='post'>
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <input id="button" type='submit' value='Join Group' />
+    </form>
+<% end %>
+
+<h3><%= @display_group.description %> </h3>
+
+<% if @display_group.user.id == current_user.id %> 
+    <p>Created by:  YOU </p>
+<% else %>
+    <p>Created by:  <%= @display_group.user.first_name %> <%= @display_group.user.last_name %></p>
+<% end %>
+<p>Members: </p>
+<% @display_group.users_enrolled.each do |member| %>
+    <%= member.first_name %> <%= member.last_name %> <br>
+<% end %>
+
+
